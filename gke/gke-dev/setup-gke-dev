@@ -1,0 +1,27 @@
+# build config
+cd build
+
+## get cluster credentials
+gcloud beta container clusters get-credentials gke-dev-1 --region europe-west2 --project tf-admin-242820
+
+## create rbac for tiller
+kubectl create -f rbac-tiller.yaml
+
+## install tiller using service-account
+helm init --service-account tiller
+
+## add appscode repository for voyager
+helm repo add appscode https://charts.appscode.com/stable/
+helm repo update
+
+### create rolebinding 
+kubectl create rolebinding default-viewer \
+  --clusterrole=view \
+  --serviceaccount=default:default \
+  --namespace=default
+
+## have to wait for tiller to install
+sleep 30
+
+## install voyager
+helm install appscode/voyager --name voyager-operator --version 8.0.1 --namespace kube-system --set cloudProvider=gke
