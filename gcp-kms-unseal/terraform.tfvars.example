@@ -1,0 +1,8 @@
+gcloud-project = "tf-admin-242820"
+account_file_path = "/home/iamtheone_ankur/.config/gcloud/iamtheone_ankur-terraform-admin.json"
+
+# gcloud-region = "europe-west2"
+# gcloud-zone = "europe-west2-a"
+# key_ring = "test"
+# crypto_key = "vault-test"
+# keyring_location = "global"
