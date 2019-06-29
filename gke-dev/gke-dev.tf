@@ -1,3 +1,10 @@
+terraform {
+  backend "gcs" {
+    bucket  = "tf-admin-242820"
+    prefix  = "terraform/state/gke-dev"
+  }
+}
+
 resource "google_container_cluster" "gke-dev" {
   name = "${var.common-name}-1"
   region = "${var.gcp-region}"
@@ -23,7 +30,7 @@ resource "google_container_cluster" "gke-dev" {
 
 resource "google_container_node_pool" "gke-dev-pool" {
   name = "default"
-  region = "${var.gcp-region}"
+  location = "${var.gcp-region}"
   cluster = "${google_container_cluster.gke-dev.name}"
 
   initial_node_count = 1

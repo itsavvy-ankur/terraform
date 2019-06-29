@@ -1,0 +1,1 @@
+bash ./local-execs/setup-vault-dev -e '35.246.50.38' -i '10.154.0.50'

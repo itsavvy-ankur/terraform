@@ -1,0 +1,33 @@
+while getopts e:i: option;
+do
+echo $option
+	case ${option} in
+		e) EXT_IP=$OPTARG;;
+		i) INT_IP=$OPTARG;;
+		?) echo "provide internal and external ip as args"
+		exit 1
+		;;
+	esac
+done
+
+echo "EXTERNAL IP ${EXT_IP}"
+echo "INTERNAL IP ${INT_IP}"
+
+export VAULT_ADDR="http://${EXT_IP}:8200"
+echo ${VAULT_ADDR}
+vault status
+status=$?
+if [ $status -ne 0 ]
+then
+export VAULT_TOKEN="$(vault operator init | grep '^Initial' | awk '{print $4}')"
+echo $VAULT_TOKEN
+else
+echo "Already initialised"
+fi
+
+cat <<EOF > ~/VAULT.env
+VAULT_ADDR="http://${INT_IP}:8200"
+VAULT_TOKEN=${VAULT_TOKEN}
+POSTGRES_HOST=10.117.16.5
+EOF
+
