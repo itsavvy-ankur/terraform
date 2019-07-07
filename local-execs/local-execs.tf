@@ -1,6 +1,6 @@
 resource "null_resource" "local-execs" {
   provisioner "local-exec" {
-    command = "bash ./local-execs/init-vault"
+    command = "echo \"Run this later : bash ./local-execs/init-vault\""
   }
 
   provisioner "local-exec" {

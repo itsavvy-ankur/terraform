@@ -9,6 +9,7 @@ resource "google_container_cluster" "gke-dev" {
   name = "${var.common-name}-1"
   region = "${var.gcp-region}"
 
+
   # min_master_version = "1.11.5"
 
   remove_default_node_pool = true
@@ -26,6 +27,7 @@ resource "google_container_cluster" "gke-dev" {
   node_pool {
     name = "default-pool"
   }
+
 }
 
 resource "google_container_node_pool" "gke-dev-pool" {
@@ -57,8 +59,9 @@ resource "google_container_node_pool" "gke-dev-pool" {
     }
   }
 
-  # setup scripts
- # provisioner "local-exec" {
-  #  command = "bash build/setup-gke-dev"
-  #}
+# setup scripts
+ provisioner "local-exec" {
+   command = "bash gke-dev/setup-gke-dev"
+ }
+
 }

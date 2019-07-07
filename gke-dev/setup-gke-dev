@@ -1,8 +1,8 @@
 # build config
-cd build
+cd gke-dev
 
 ## get cluster credentials
-gcloud beta container clusters get-credentials gke-dev-1 --region europe-west2 --project tf-admin-242820
+gcloud container clusters get-credentials gke-dev-1 --zone europe-west2-a --project tf-admin-242820
 
 ## create rbac for tiller
 kubectl create -f rbac-tiller.yaml
@@ -24,4 +24,4 @@ kubectl create rolebinding default-viewer \
 sleep 30
 
 ## install voyager
-helm install appscode/voyager --name voyager-operator --version 8.0.1 --namespace kube-system --set cloudProvider=gke
+helm install appscode/voyager --name voyager-operator --version 10.0.0 --namespace kube-system --set cloudProvider=gke

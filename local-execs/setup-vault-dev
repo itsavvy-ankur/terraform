@@ -13,19 +13,36 @@ done
 echo "EXTERNAL IP ${EXT_IP}"
 echo "INTERNAL IP ${INT_IP}"
 
-export VAULT_ADDR="http://${EXT_IP}:8200"
+export VAULT_ADDR=http://${EXT_IP}:8200
 echo ${VAULT_ADDR}
 vault status
 status=$?
 if [ $status -ne 0 ]
 then
-export VAULT_TOKEN="$(vault operator init | grep '^Initial' | awk '{print $4}')"
+export VAULT_TOKEN=$(vault operator init | grep '^Initial' | awk '{print $4}')
 echo $VAULT_TOKEN
 cat <<EOF > ~/VAULT.env
-VAULT_ADDR="http://${INT_IP}:8200"
+VAULT_ADDR=http://${INT_IP}:8200
 VAULT_TOKEN=${VAULT_TOKEN}
-POSTGRES_HOST=10.117.16.5
+POSTGRES_HOST=35.246.60.81
+VAULT_EXT_IP=${EXT_IP}
+EOF
+
+cat <<EOF > ~/VAULT-ENV.sh
+export VAULT_ADDR=http://${EXT_IP}:8200
+export VAULT_TOKEN=${VAULT_TOKEN}
+export POSTGRES_HOST=35.246.60.81
+export VAULT_EXT_IP=${EXT_IP}
+vault login ${VAULT_TOKEN}
+vault secrets enable -path=secret kv
 EOF
 else
 echo "Already initialised"
+cat <<EOF > ~/VAULT-ENV.sh
+export VAULT_ADDR=http://$(cat ~/VAULT.env | grep VAULT_EXT_IP | awk 'BEGIN { FS = "=" }; { print $2 }'):8200
+export VAULT_TOKEN=$(cat ~/VAULT.env | grep VAULT_TOKEN | awk 'BEGIN { FS = "=" }; { print $2 }')
+export POSTGRES_HOST=35.246.60.81
+EOF
+export VAULT_ADDR=http://$(cat ~/VAULT.env | grep VAULT_EXT_IP | awk 'BEGIN { FS = "=" }; { print $2 }'):8200
+export VAULT_TOKEN=$(cat ~/VAULT.env | grep VAULT_TOKEN | awk 'BEGIN { FS = "=" }; { print $2 }')
 fi
