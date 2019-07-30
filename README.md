@@ -2,7 +2,6 @@
 Terraform repository
 
 # Execution Instuctions
-* cd projects/terraform/
 * terraform plan
 * terraform apply
 * bash local-execs/init-vault
